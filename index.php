@@ -44,10 +44,18 @@ $usuario4->insert();
 echo $usuario4;
 */
 
+/*
 //atualiza os dados
 $usuario5 = new Usuario();
 $usuario5->loadById(4);
 $usuario5->update("Bolsonaro", "38Alianca");
 echo $usuario5;
+*/
+
+ $usuario6 = new Usuario();
+ $usuario6->loadById(40);
+ $usuario6->delete();
+ echo " $usuario6";
+
 
 ?>
