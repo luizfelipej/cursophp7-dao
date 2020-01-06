@@ -39,6 +39,12 @@ public function setDtCadastro($value){
 	$this->dtCadastro = $value;
 }
 
+// ="" não o torna obrigatório
+public function __construct($login ="", $senha =""){
+	$this->setDesLogin($login);
+	$this->setDesSenha($senha);
+}
+
 public function loadById($id){
 
 	$sql = new Sql();
@@ -48,11 +54,7 @@ public function loadById($id){
 		));
 
 		if(count($results) > 0){
-			$row = $results[0];
-			$this->setIdUsuario($row['id_usuario']);
-			$this->setDesLogin($row['des_login']);
-			$this->setDesSenha($row['des_senha']);
-			$this->setDtCadastro(new DateTime($row['dt_cadastro']));
+			$this->setData($results[0]);
 		}
 }
 
@@ -83,16 +85,46 @@ public function login ($login, $password){
 		));
 
 		if(count($results) > 0){
-			$row = $results[0];
-			$this->setIdUsuario($row['id_usuario']);
-			$this->setDesLogin($row['des_login']);
-			$this->setDesSenha($row['des_senha']);
-			$this->setDtCadastro(new DateTime($row['dt_cadastro']));
-		} else {
+			$this->setData($results[0]);
 
+		} else {
 			throw new Exception("Login e/ou senha invalidos.");
 			
 		}
+}
+
+public function setData($data){
+	$this->setIdUsuario($data['id_usuario']);
+	$this->setDesLogin($data['des_login']);
+	$this->setDesSenha($data['des_senha']);
+	$this->setDtCadastro(new DateTime($data['dt_cadastro']));
+}
+
+public function insert(){
+	$sql = new Sql();
+
+	$results= $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+		':LOGIN'=>$this->getDesLogin(),
+		':PASSWORD'=>$this->getDesSenha()
+
+	));
+
+	if(count($results) > 0){
+		$this->setData($results[0]);
+	}
+}
+
+public function update($login, $senha){
+	$this->setDesLogin($login);
+	$this->setDesSenha($senha);
+
+	$sql = new Sql();
+
+	$sql->query("UPDATE tb_usuarios SET des_login = :LOGIN, des_senha = :PASSWORD WHERE id_usuario = :ID", array(
+		':LOGIN'=>$this->getDesLogin(),
+		':PASSWORD'=>$this->getDesSenha(),
+		':ID'=>$this->getIdUsuario()
+	));
 }
 
 public function __toString(){
@@ -103,7 +135,6 @@ public function __toString(){
 		"dt_cadastro"=>$this->getDtCadastro()->format("d/m/Y H:i:s")
 	));
 }
-
 
 }
 

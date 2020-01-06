@@ -3,9 +3,7 @@
 require_once("config.php");
 /*
 $sql = new Sql();
-
 $usuarios = $sql->select("SELECT * FROM tb_usuarios");
-
 echo json_encode($usuarios);
 */
 
@@ -32,9 +30,24 @@ $search = Usuario::search("jo");
 echo json_encode($search);
 */
 
+/*
 //carrega um usuario usando o login e a senha
-$usuario = new Usuario();
-$usuario->login("jooj","MasQcuLindo!");
-echo $usuario;
+$usuario3 = new Usuario();
+$usuario3->login("jooj","MasQcuLindo!");
+echo $usuario3;
+*/
+
+/*
+//insere dados
+$usuario4 = new Usuario("aluno", "TePegoEteJOOJ");
+$usuario4->insert();
+echo $usuario4;
+*/
+
+//atualiza os dados
+$usuario5 = new Usuario();
+$usuario5->loadById(4);
+$usuario5->update("Bolsonaro", "38Alianca");
+echo $usuario5;
 
 ?>
